@@ -1,0 +1,58 @@
+[package]
+name = "klsyn-dioxus"
+version = "0.1.0"
+authors = ["Yuanhao Chen <nyoeghau@nyoeghau.com>"]
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+dioxus = { version = "0.6", features = [] }
+klsyn = { git = "https://github.com/yuanhao-chen-nyoeghau/klsyn-rs", features = [
+    "strum",
+] }
+rand = { version = "0.9", default-features = false, features = ["small_rng"] }
+web-sys = { version = "0.3", default-features = false, features = [
+    "AudioContext",
+    "AudioBuffer",
+    "AudioBufferSourceNode",
+    "AudioDestinationNode",
+] }
+wasm-bindgen = { version = "0.2", default-features = false }
+plotters = { version = "0.3", default-features = false, features = [
+    "svg_backend",
+    "line_series",
+] }
+plotters-svg = { version = "0.3" }
+base64 = "0.22.1"
+web-time = { version = "1.1.0", default-features = false }
+strum = "0.27.1"
+spectrum-analyzer = "1.6.0"
+num = "0.4.3"
+
+[features]
+default = ["web"]
+web = ["dioxus/web"]
+desktop = ["dioxus/desktop"]
+mobile = ["dioxus/mobile"]
+
+[profile]
+
+[profile.wasm-dev]
+inherits = "dev"
+opt-level = 1
+
+[profile.server-dev]
+inherits = "dev"
+
+[profile.android-dev]
+inherits = "dev"
+
+[profile.release]
+opt-level = "z"
+debug = false
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true
+incremental = false
