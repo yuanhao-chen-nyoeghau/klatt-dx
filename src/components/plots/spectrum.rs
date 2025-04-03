@@ -5,8 +5,12 @@ pub fn Spectrum() -> Element {
     let State {
         fft_spectrum,
         envelope,
+        frame_parms,
         ..
     } = use_context();
+
+    let a_min = -120.;
+    let a_max = 5.;
 
     rsx! {
         Plotters {
@@ -17,7 +21,7 @@ pub fn Spectrum() -> Element {
                     .margin(25)
                     .x_label_area_size(10)
                     .y_label_area_size(35)
-                    .build_cartesian_2d(0f64..FREQ_PLOT_MAX, -120f64..0.)
+                    .build_cartesian_2d(0f64..FREQ_PLOT_MAX, a_min..a_max)
                     .unwrap();
                 chart
                     .configure_mesh()
@@ -27,6 +31,15 @@ pub fn Spectrum() -> Element {
                     .max_light_lines(0)
                     .draw()
                     .unwrap();
+                let f0 = frame_parms.read().f0;
+                chart
+                    .draw_series(
+                        LineSeries::new(
+                            vec![(f0, a_min), (f0, a_max)],
+                            ShapeStyle::from(COLOR_NEUTRAL).stroke_width(2),
+                        ),
+                    )
+                    .unwrap();
                 chart
                     .draw_series(
                         LineSeries::new(
@@ -35,7 +48,7 @@ pub fn Spectrum() -> Element {
                                 .iter()
                                 .take_while(|&(fr, _)| *fr <= FREQ_PLOT_MAX)
                                 .map(|&(fr, amp)| (fr, amp)),
-                            RED,
+                            ShapeStyle::from(BLACK).stroke_width(2),
                         ),
                     )
                     .unwrap();

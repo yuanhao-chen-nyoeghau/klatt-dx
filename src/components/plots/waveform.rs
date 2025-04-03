@@ -10,7 +10,7 @@ pub fn Waveform() -> Element {
             size: (2500, 300),
             draw: move |drawing_area| {
                 let mut chart = ChartBuilder::on(&drawing_area)
-                    .build_cartesian_2d(0..sound.len(), -1f64..1.)
+                    .build_cartesian_2d(0..sound.len(), -0.75f64..0.75)
                     .unwrap();
                 chart
                     .draw_series(

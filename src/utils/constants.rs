@@ -14,7 +14,7 @@ pub const DEFAULT_FRAME_PARMS: FrameParms = FrameParms {
     breathiness_db: -25.,
     tilt_db: 0.,
     gain_db: f64::NAN,
-    agc_rms_level: 0.3,
+    agc_rms_level: 0.25,
     nasal_formant_freq: f64::NAN,
     nasal_formant_bw: f64::NAN,
     oral_formant_freq: [520., 1006., 2831., 3168., 4135., 5020.],
