@@ -5,17 +5,17 @@ pub fn Spectrum() -> Element {
     let State {
         fft_spectrum,
         envelope,
-        frame_parms,
         ..
     } = use_context();
 
     let a_min = -120.;
     let a_max = 5.;
+    let scale = 600;
 
     rsx! {
-        Plotters {
+        Plotter {
             class: "border-base-content rounded border border-solid",
-            size: (2500, 500),
+            size: (5 * scale, 1 * scale),
             draw: move |drawing_area| {
                 let mut chart = ChartBuilder::on(&drawing_area)
                     .margin(25)
@@ -31,27 +31,27 @@ pub fn Spectrum() -> Element {
                     .max_light_lines(0)
                     .draw()
                     .unwrap();
-                let f0 = frame_parms.read().f0;
                 chart
                     .draw_series(
-                        LineSeries::new(
-                            vec![(f0, a_min), (f0, a_max)],
-                            ShapeStyle::from(COLOR_NEUTRAL).stroke_width(2),
-                        ),
-                    )
-                    .unwrap();
-                chart
-                    .draw_series(
-                        LineSeries::new(
+                        DashedLineSeries::new(
                             envelope
                                 .read()
                                 .iter()
                                 .take_while(|&(fr, _)| *fr <= FREQ_PLOT_MAX)
                                 .map(|&(fr, amp)| (fr, amp)),
-                            ShapeStyle::from(BLACK).stroke_width(2),
+                            10,
+                            5,
+                            ShapeStyle::from(COLOR_INFO).stroke_width(2),
                         ),
                     )
-                    .unwrap();
+                    .unwrap()
+                    .label("Vocal Tract Transfer Function (Ideal Spectral Envelope)")
+                    .legend(|(x, y)| {
+                        Rectangle::new(
+                            [(x - 20, y - 8), (x + 20, y - 4)],
+                            ShapeStyle::from(COLOR_INFO).filled(),
+                        )
+                    });
                 chart
                     .draw_series(
                         LineSeries::new(
@@ -63,6 +63,19 @@ pub fn Spectrum() -> Element {
                             BLACK,
                         ),
                     )
+                    .unwrap()
+                    .label("FFT Spectrum")
+                    .legend(|(x, y)| {
+                        Rectangle::new(
+                            [(x - 20, y - 8), (x + 20, y - 4)],
+                            ShapeStyle::from(BLACK).filled(),
+                        )
+                    });
+                chart
+                    .configure_series_labels()
+                    .label_font(("sans-serif", 30))
+                    .position(SeriesLabelPosition::Coordinate(2170, 25))
+                    .draw()
                     .unwrap();
             },
         }

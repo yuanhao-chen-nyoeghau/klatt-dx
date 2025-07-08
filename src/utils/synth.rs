@@ -139,8 +139,11 @@ fn poly_fraction_complex64_eval(fraction: &Fraction, z: Complex64) -> Complex64 
 }
 
 pub fn play_sound(sound: &[f64], sample_rate: f64) -> Result<(), JsValueError> {
-    let State { audio_context, .. } = use_context();
-
+    let State {
+        mut audio_playing,
+        audio_context,
+        ..
+    } = use_context();
     let audio_buffer =
         audio_context
             .read()
@@ -152,6 +155,13 @@ pub fn play_sound(sound: &[f64], sample_rate: f64) -> Result<(), JsValueError> {
     audio_buffer_source.set_buffer(Some(&audio_buffer));
     audio_buffer_source.set_loop(false);
     audio_buffer_source.connect_with_audio_node(&audio_context.read().destination())?;
+
+    let onended = Closure::<dyn FnMut(JsValue)>::new(move |_| {
+        audio_playing.set(false);
+    });
+    audio_buffer_source
+        .add_event_listener_with_callback("ended", onended.as_ref().unchecked_ref())?;
+    onended.forget();
 
     audio_buffer_source.start()?;
     Ok(())

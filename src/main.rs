@@ -18,10 +18,10 @@ fn App() -> Element {
 
         body { class: "container mx-auto px-5 py-10",
             div { class: "max-w-[1400px] mx-auto",
-                // h1 { "Klsyn Formant Synthesizer" }
+                h1 { "Klsyn Formant Synthesizer" }
                 Plots {}
-                Form {}
                 Buttons {}
+                Form {}
             }
         }
     }

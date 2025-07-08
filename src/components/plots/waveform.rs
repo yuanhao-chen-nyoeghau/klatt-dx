@@ -5,7 +5,7 @@ pub fn Waveform() -> Element {
     let State { sound, .. } = use_context();
 
     rsx! {
-        Plotters {
+        Plotter {
             class: "border-base-content rounded border border-solid",
             size: (2500, 300),
             draw: move |drawing_area| {

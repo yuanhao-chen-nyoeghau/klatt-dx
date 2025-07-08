@@ -1,4 +1,5 @@
-use web_sys::AudioContext;
+pub use wasm_bindgen::{prelude::*, JsCast};
+pub use web_sys::{AudioBufferSourceNode, AudioContext};
 
 use crate::*;
 
@@ -14,6 +15,7 @@ pub struct State {
     pub fft_spectrum: Signal<Vec<(f64, f64)>>,
     pub envelope: Signal<Vec<(f64, f64)>>,
 
+    pub audio_playing: Signal<bool>,
     pub audio_context: Signal<AudioContext>,
 }
 
@@ -32,6 +34,7 @@ impl Default for State {
             sound: Signal::new(Vec::new()),
             fft_spectrum: Signal::new(Vec::new()),
             envelope: Signal::new(Vec::new()),
+            audio_playing: Signal::new(false),
             audio_context: Signal::new(AudioContext::new().unwrap()),
         }
     }
