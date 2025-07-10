@@ -22,12 +22,12 @@ jobs:
       - name: Set up Dioxus
         run: cargo binstall dioxus-cli@0.6.1
       - name: Dioxus build
-        run: dx build --verbose
+        run: dx build --release --verbose
       - name: Upload build artifacts
         id: deployment
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./target/dx/klsyn-dioxus/debug/web/public
+          path: ./target/dx/klsyn-dioxus/release/web/public
 
   deploy:
     runs-on: ubuntu-latest
